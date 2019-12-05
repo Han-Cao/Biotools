@@ -154,8 +154,10 @@ metaplot <- function( mn, se, nn=NULL, labels=NULL, conf.level = .95,
         }else{
         		mxstrlenlabel <- 0         
         }        
-        text( rep( lalim[1]-mxstrlenlabel, n ), -( 1:n ), labels,..., col=rep(colors$text,length.out=n),adj=0)            
-        
+        #text( rep( lalim[1]-mxstrlenlabel, n ), -( 1:n ), labels,..., col=rep(colors$text,length.out=n),adj=0)
+        #Edit by Hanc            
+        text( rep( lalim[1], n ), -( 1:n ), labels,..., col=rep(colors$text,length.out=n),adj=0)
+
 
     if ( is.null( nn ) )
         nn <- se ^ -2
@@ -328,10 +330,11 @@ pmplot <- function(maxylim=10, p, h, ptab, summary, summaryse, effects, stderrs,
     cstudies = studies
     #change = 1:length(studies)
     #change <- c(1, 10, 2, 11, 3, 4, 12, 5, 13, 6, 14, 7, 15, 8, 16, 9, 17)
-    for (k in 1:length(cstudies)) {
-        cstudies[k] = paste(which(change == k), ".", cstudies[k], sep="")
-    }
-
+    
+    #for (k in 1:length(cstudies)) {
+    #    cstudies[k] = paste(which(change == k), ".", cstudies[k], sep="")
+    #}
+    #Edit by Hanc, remove study no.
     id <- 1:length(studies)
     for (k in 1:length(cstudies)) {
         id[k] = which(change == k)
@@ -363,18 +366,16 @@ pmplot <- function(maxylim=10, p, h, ptab, summary, summaryse, effects, stderrs,
              xlab="Log odds ratio", ylab="",
              summn=as.numeric(summary[i])*flip[i],sumse=as.numeric(summaryse[i]),
              sumnn=1/(as.numeric(summaryse[i])^2),
-             summlabel="RE Summary",
-             main=rsid)
+             summlabel="RE Summary")#, main=rsid) Edit by Hanc
     off = c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0)
-    if (!is.na(newrsid[i, 2])) {
-        genename = newrsid[i,2]
-        mtext(bquote(bold(.("Gene : ")) ~ bolditalic(.(genename))),line=0, cex=1.20, adj=(0.118+off[i])-0.0685+0.192)
-    }
+
     # color dots
     # compute x-location
     ## added by yurang.park
     if(max(nchar(studies))>5){
-    	mxstrlenlabel <- max(strwidth(studies))-0.35  
+    	#mxstrlenlabel <- max(strwidth(studies))-0.35
+        #Edit by Hanc
+        mxstrlenlabel <- max(strwidth(studies))-0.18  
     }else{
     	mxstrlenlabel <- 0
     } 
@@ -402,16 +403,28 @@ pmplot <- function(maxylim=10, p, h, ptab, summary, summaryse, effects, stderrs,
     #s_x_loc = nxlim[1] - 0.2942 * (nxlim[2] - nxlim[1])
     #s_x_loc = nxlim[1] - 0.2942 * (nxlim[2] - nxlim[1])
     s_x_loc = (nxlim[1] - 0.1242 * (nxlim[2] - nxlim[1])) - (mxstrlenlabel+0.1)
-    text(s_x_loc, 0, expression(bold("Study Name")))
+    #text(s_x_loc, 0, expression(bold("Study Name")))
+    #Edit by Hanc
     
     pv=bquote(bolditalic("P") ~ bold("-value"))
-    p_x_loc = (nxlim[1] - 0.5360 * (nxlim[2] - nxlim[1])) - (mxstrlenlabel-0.05)
+    #p_x_loc = (nxlim[1] - 0.5360 * (nxlim[2] - nxlim[1])) - (mxstrlenlabel-0.05)
+    #Edit by Hanc 
+    p_x_loc = (nxlim[1] - 0.33 * ( nxlim[2] - nxlim[1] ) - (mxstrlenlabel+0.15))
     text(p_x_loc, 0.06, pv, cex=1.1)
 
-    p_x_loc = (nxlim[1] - 0.5642 * (nxlim[2] - nxlim[1]))- (mxstrlenlabel-0.05)
+    #p_x_loc = (nxlim[1] - 0.5642 * (nxlim[2] - nxlim[1]))- (mxstrlenlabel-0.05)
+    #Edit by Hanc
     for (k in 1:length(change)) {
         y_loc = k*-1.00 + 0.1 - 0.08
         text(p_x_loc, y_loc, pval(p[change[k]]), cex=.8)
+    }
+    if (!is.na(newrsid[i, 2])) {
+        genename = newrsid[i,2]
+        #mtext(bquote(bold(.("Gene : ")) ~ bolditalic(.(genename))),line=0, cex=1.20, adj=(0.118+off[i])-0.0685+0.192)
+        #Edit by Hanc, re-align
+        name_loc=0.12
+        mtext(bquote(bold(.("Gene : ")) ~ bolditalic(.(genename))),line=0, cex=1.20, adj=name_loc)
+        mtext(rsid, line=1, cex=1.20, adj=name_loc)
     }
 
 
