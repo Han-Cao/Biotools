@@ -1,11 +1,11 @@
 # R functions for genetic analysis.
 
 countAllele <- function(genotype, mode="AlleleTable", target=NULL){
-	if (mode="AlleleTable"){
+	if (mode=="AlleleTable"){
 		counts <- ifelse(genotype[,1]==target,1,0) + ifelse(genotype[,2]==target,1,0)
 		return(counts)
 	}
-	if (mode="vcf"){
+	if (mode=="vcf"){
 		genotype[genotype=="0|0"] <- 0
 		genotype[genotype=="0|1" | genotype=="1|0"] <- 1
 		genotype[genotype=="1|1"] <- 2
