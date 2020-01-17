@@ -19,6 +19,7 @@ countHap <- function(table, hapList){
 	for (type in hapList){
 		table[,as.character(type)] <- CountAllele(type, table[,c("hap1", "hap2")])
 	}
+	return(table)
 }
 
 #Remove zero in sample ID\
