@@ -17,8 +17,9 @@ countAllele <- function(genotype, mode="AlleleTable", target=NULL){
 #Count haplotypes in hapList
 countHap <- function(table, hapList){
 	for (type in hapList){
-		table[,as.character(type)] <- CountAllele(type, table[,c("hap1", "hap2")])
+		table[,as.character(type)] <- countAllele(table[,c("hap1", "hap2")], target=type)
 	}
+	table[,"others"] <- 2 - rowSums(table[,hapList])
 	return(table)
 }
 
