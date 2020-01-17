@@ -24,6 +24,6 @@ countHap <- function(table, hapList){
 #Remove zero in sample ID\
 #eg. A0010 -> A10
 removeZero <- function(name){
-	sub("[^\d\W]+0+","\\1",name)
+	sub("[^\\d\\W]+0+","\\1",name)
 }
 
