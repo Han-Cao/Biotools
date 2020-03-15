@@ -345,18 +345,27 @@ pmplot <- function(maxylim=10, p, h, ptab, summary, summaryse, effects, stderrs,
     ## added by yurang.park
     maxsl<-max(nchar(studies))*0.2
     pdf(pmplot_file, width=11.4+maxsl, height=height)
-    
+    # remove by HanC
+    # pp = min(as.numeric(ptab[i]))
+    # ps = as.character(pp)
+    # pa = paste(substr(ps, 1, 4), "x")
+    # po = substr(ps, (nchar(ps)-1), nchar(ps))
+    # po = as.character(as.numeric(po) *(-1))
+    # if (is.na(newrsid[i, 2])) {
+    #     rsid <- bquote(bold(.(newrsid[i,1])) ~ bold(" (Meta ") ~ bolditalic(P) ~ bold(.(" = ")) ~ bold(.(pa)) ~ bold("10")^bold(.(po)) ~ bold(")") )
+    # }
+    # else {
+    #     genename = newrsid[i,2]
+    #     rsid <- bquote(bold(.(newrsid[i,1])) ~ bold(" (Meta ") ~ bolditalic(P) ~ bold(.(" = ")) ~ bold(.(pa)) ~ bold("10")^bold(.(po)) ~ bold(")") )
+    # }
     pp = min(as.numeric(ptab[i]))
-    ps = as.character(pp)
-    pa = paste(substr(ps, 1, 4), "x")
-    po = substr(ps, (nchar(ps)-1), nchar(ps))
-    po = as.character(as.numeric(po) *(-1))
+    ps = formatC(pp, format = "E", digits = 2)
     if (is.na(newrsid[i, 2])) {
-        rsid <- bquote(bold(.(newrsid[i,1])) ~ bold(" (Meta ") ~ bolditalic(P) ~ bold(.(" = ")) ~ bold(.(pa)) ~ bold("10")^bold(.(po)) ~ bold(")") )
+        rsid <- bquote(bold(.(newrsid[i,1])) ~ bold(" ( RE2 ") ~ bolditalic(P) ~ bold(.(" = ")) ~ bold(.(ps)) ~ bold(")") )
     }
     else {
         genename = newrsid[i,2]
-        rsid <- bquote(bold(.(newrsid[i,1])) ~ bold(" (Meta ") ~ bolditalic(P) ~ bold(.(" = ")) ~ bold(.(pa)) ~ bold("10")^bold(.(po)) ~ bold(")") )
+        rsid <- bquote(bold(.(newrsid[i,1])) ~ bold(" ( RE2 ") ~ bolditalic(P) ~ bold(.(" = ")) ~ bold(.(ps)) ~ bold(")") )
     }
     #layout(matrix(c(1,2,3,4),1,2,byrow=TRUE),widths=c(6.3,5.5))
     layout(matrix(c(1,2,3,4),1,2,byrow=TRUE),widths=c(7.8+maxsl,5.9))
