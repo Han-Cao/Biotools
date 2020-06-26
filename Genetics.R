@@ -25,7 +25,12 @@ countHap <- function(table, hapList){
 
 #Remove zero in sample ID\
 #eg. A0010 -> A10
-removeZero <- function(name){
-	sub("[^\\d\\W]+0+","\\1",name)
+remove_zero <- function(x) {
+  sub("^([A-Za-z]+)0+", "\\1", x)
 }
 
+#convert p value to z score
+convert_p2z <- function(beta, p){
+  abs_z <- abs(qnorm(p/2))
+  sign(beta) * abs_z
+}
