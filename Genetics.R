@@ -1,3 +1,5 @@
+library(RNOmni)
+
 # R functions for genetic analysis.
 
 countAllele <- function(genotype, mode="AlleleTable", target=NULL){
@@ -33,4 +35,12 @@ remove_zero <- function(x) {
 convert_p2z <- function(beta, p){
   abs_z <- abs(qnorm(p/2))
   sign(beta) * abs_z
+}
+
+rankNorm_withNA <- function(u, k = 3/8){
+  df_raw <- data.frame(ID=1:length(u),origin=u)
+  df_no_NA <- df_raw[complete.cases(df_raw$origin),]
+  df_no_NA$rankNorm <- rankNorm(df_no_NA$origin, k)
+  df_merge <- left_join(df_raw, df_no_NA, by="ID")
+  return(df_merge$rankNorm)
 }
