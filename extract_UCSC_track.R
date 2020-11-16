@@ -1,9 +1,21 @@
 library(rtracklayer)
-library(biomaRt)
 library(dplyr)
 
+options(stringsAsFactors = FALSE)
+
+pos_in_region <- function(pos, start, end){
+  greater <- pos >= start
+  smaller <- pos <= end
+  row_n <- which(smaller & greater)
+  return(row_n)
+}
+
+#read input files
+target_list <- read.csv("Input/20201015 gene list_314.csv")
+target_trackers <- c()
+
 #set input for UCSC track
-position <- "chr9:6,215,786-6,257,983"
+position <- "chr19:29,925,114-29,960,718"
 hg <- "hg19"
 
 position <- gsub(",", "", position)
@@ -14,7 +26,7 @@ pos_end <- as.numeric(gsub("(\\w+)?:(\\d+)-(\\d+)", "\\3", position))
 #extract TFBS
 ucsc <- browserSession()
 genome(ucsc) <- hg
-query <- ucscTableQuery(ucsc, track="wgEncodeRegTfbsClusteredV3", GRangesForUCSCGenome(hg, chr, IRanges(pos_start, pos_end)))
+query <- ucscTableQuery(ucsc, track="knownGene", GRangesForUCSCGenome(hg, chr, IRanges(pos_start, pos_end)))
 tf <- data.frame(track(query))
 
 target <- read.table("D:/Han/Biotools/Input/SNP_info.input", header = TRUE)
@@ -29,15 +41,15 @@ for (i in 1:nrow(target)) {
 }
 
 #extract CREs
-CREs <- read.table("Input/IL33_CRE.bed", col.names = c("chr", "start", "end",  "CRE", "z"))
-target <- read.table("D:/Han/Biotools/Input/SNP_info.input", header = TRUE)
-target$flag <- FALSE
+CREs <- read.table("D:/Han/Annotation/mm10-ccREs.bed", col.names = c("chr", "start", "end",  "cCRE_name1", "cCRE_name2", "Type"))
+target <- read.csv("D:/Han/Biotools/Input/20201015 gene list_314.csv", header = TRUE)
+target$cCRE <- "No"
 for (i in 1:nrow(target)) {
-  for (j in 1:nrow(CREs)) {
-    if(target[i, 'POS'] >= CREs[j, 'start'] & target[i, 'POS'] <= CREs[j, 'end']){
-      target[i, 'flag'] <- TRUE 
-      break()
-    }
+  chr_CREs <- filter(CREs, chr==target[i,'chr'])
+  row_n <- pos_in_region(target[i, 'pos'], chr_CREs$start, chr_CREs$end)
+  if (length(row_n) > 0) {
+    print(row_n)
+    target[i, "cCRE"] <- chr_CREs[row_n, "Type"]
   }
 }
 
