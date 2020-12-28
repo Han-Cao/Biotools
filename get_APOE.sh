@@ -1,8 +1,17 @@
 #!/bin/bash
+genome=hg19
+prefix=""
 
 vcf=$1
+genome=$2
+prefix=$3
 
-bcftools convert --hapsample APOE -r 19:45409039-45412650 -i 'ID="rs429358" | ID="rs7412"' --vcf-ids $vcf
+if [[ $genome == "hg19" ]]; then
+	bcftools convert --hapsample APOE -r ${prefix}19:45411941,${prefix}19:45412079 --vcf-ids $vcf
+elif [[ $genome == "hg38" ]]; then
+	bcftools convert --hapsample APOE -r ${prefix}19:44908684,${prefix}19:44908822 --vcf-ids $vcf
+fi
+
 bgzip -df APOE.hap.gz
 
 echo '
