@@ -113,7 +113,7 @@ if [[ ${abline} != "NULL" ]]; then
     plot_par="${plot_par} signifLine=${abline}"
 fi
 if [[ ${ref2} != "NULL" ]]; then
-    plot_par="${plot_par} condLdLow='gray50' condPch='16,16,16,16,16,16,16,16,16' ldCuts = '0,.5,.7,.9,1'"
+    plot_par="${plot_par} condLdLow=gray50 condPch=16,16,16,16,16,16,16,16,16 ldCuts=0,.4,.6,.8,1"
 fi
 
 
@@ -153,7 +153,7 @@ else
     --chr $chr \
     --start $start \
     --end $end \
-    --ld $ld \
+    --ld-vcf $vcf \
     --build hg19 \
     --plotonly \
     --add-refsnps $ref2 \
