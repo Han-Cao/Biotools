@@ -18,8 +18,10 @@ if [[ $# -eq 0 ]] ; then
     echo "-e exclude snps, seperate by comma"
     echo "-y max y axis (default=10)"
     echo "-n remove reference SNP name from plots"
+    echo "-g genome build (default: hg19)"
     echo "-N no ld plot"
     echo "-l add significant line (-log10 value)"
+    echo "-x additional plot parameters (e.g. 'legend=\"left\"'')"
     exit 0
 fi
 
@@ -30,8 +32,10 @@ abline=NULL
 rplot_drawMarkerNames=TRUE
 rplot_ldColors="gray50,gray50,#f18c8d,#ea5354,#e41a1c,#e41a1c"
 ref2=NULL
+genome=hg19
+plot_par=""
 
-while getopts ":p:v:V:r:R:L:e:o:l:y:nN" opt; do
+while getopts ":p:v:V:r:R:L:e:o:g:x:l:y:nN" opt; do
   case $opt in
     p) plink="$OPTARG"
     ;;
@@ -56,6 +60,10 @@ while getopts ":p:v:V:r:R:L:e:o:l:y:nN" opt; do
     l) abline="$OPTARG"
     ;;
     N) no_LD="TRUE"
+    ;;
+    g) genome="$OPTARG"
+    ;;
+    x) plot_par="$OPTARG"
     ;;
   esac
 done
@@ -108,7 +116,7 @@ name=$(basename $plink)
 name=${name%%.*}
 
 #set additional plot parameters
-plot_par="ymax=${y_max} drawMarkerNames=${rplot_drawMarkerNames}"
+plot_par="${plot_par} ymax=${y_max} drawMarkerNames=${rplot_drawMarkerNames}"
 if [[ ${abline} != "NULL" ]]; then
     plot_par="${plot_par} signifLine=${abline}"
 fi
@@ -127,7 +135,7 @@ if [[ $no_LD == "TRUE" ]]; then
     --start $start \
     --end $end \
     --no-ld \
-    --build hg19 \
+    --build ${genome} \
     --plotonly \
     -p ${outpath}${name} \
     ${plot_par}
@@ -141,7 +149,7 @@ elif [[ ${ref2} == "NULL" ]]; then
     --start $start \
     --end $end \
     --ld $ld \
-    --build hg19 \
+    --build ${genome} \
     --plotonly \
     -p ${outpath}${name} \
     ${plot_par}
@@ -154,7 +162,7 @@ else
     --start $start \
     --end $end \
     --ld-vcf $vcf \
-    --build hg19 \
+    --build ${genome} \
     --plotonly \
     --add-refsnps $ref2 \
     -p ${outpath}${name} \
