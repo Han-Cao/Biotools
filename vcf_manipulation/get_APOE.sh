@@ -29,7 +29,7 @@ CountAllele <- function(target, AlleleTable){
 }
 
 hap=read.table("APOE.hap")
-sample=read.table("APOE.sample", header=TRUE)[-1,-3]
+sample=read.table("APOE.samples", header=TRUE)[-1,-3]
 hap=apply(hap, 1,convert_code)
 hap1_index <- seq(6, nrow(hap)-1, 2)
 hap2_index <- seq(7, nrow(hap), 2)
@@ -47,4 +47,4 @@ write.table(sample,"APOE.txt",row.names=FALSE, quote=FALSE, sep="\t")
 ' >tmp_get_APOE.R
 Rscript --vanilla tmp_get_APOE.R
 
-rm tmp_get_APOE.R APOE.hap APOE.sample
+rm tmp_get_APOE.R APOE.hap APOE.samples
